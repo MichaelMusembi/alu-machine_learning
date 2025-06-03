@@ -1,47 +1,39 @@
 #!/usr/bin/env python3
-"""
-poly_integral.py
+""" defines a function that calculates the integral of a polynomial """
 
-This module contains a function to compute the indefinite integral
-of a polynomial represented as a list of coefficients.
-"""
 
 def poly_integral(poly, C=0):
     """
-    Calculates the indefinite integral of a polynomial.
+    calculates the integral of the given polynomial
 
-    Args:
-        poly (list): A list of coefficients where the index represents the
-                     power of x (e.g., [5, 3, 0, 1] represents x^3 + 3x + 5).
-        C (int or float): The constant of integration. Default is 0.
+    Parameters:
+        poly (list): list of coefficients representing a polynomial
+            the index of the list represents the power of x
+            the coefficient belongs to
+        C (int): the integration constant
 
     Returns:
-        list: A list of coefficients representing the integral of the polynomial,
-              starting with the constant of integration. Coefficients that are
-              whole numbers are returned as integers.
-              Returns None if the input is invalid.
+        a new list of coefficients representing the derivative
+            the returned list is as small as possible
+            if a coefficient is a whole number, it is represented by an int
+        None, if poly or C are not valid
     """
-    if not isinstance(poly, list) or not all(isinstance(c, (int, float)) for c in poly):
+    if type(poly) is not list or len(poly) < 1:
         return None
-
-    if not isinstance(C, (int, float)):
+    if type(C) is not int and type(C) is not float:
         return None
-
-    # Start with the constant of integration
-    result = [C]
-
-    # Compute the integral for each term
-    for i, coeff in enumerate(poly):
-        integral_coeff = coeff / (i + 1)
-
-        # Convert to int if coefficient is a whole number
-        if integral_coeff.is_integer():
-            integral_coeff = int(integral_coeff)
-
-        result.append(integral_coeff)
-
-    # Remove unnecessary trailing zeros
-    while len(result) > 1 and result[-1] == 0:
-        result.pop()
-
-    return result
+    for coefficient in poly:
+        if type(coefficient) is not int and type(coefficient) is not float:
+            return None
+    if type(C) == float and C.is_integer():
+        C = int(C)
+    integral = [C]
+    for power, coefficient in enumerate(poly):
+        if (coefficient % (power + 1)) == 0:
+            new_coefficient = coefficient // (power + 1)
+        else:
+            new_coefficient = coefficient / (power + 1)
+        integral.append(new_coefficient)
+    while integral[-1] == 0 and len(integral) > 1:
+        integral = integral[:-1]
+    return integral
