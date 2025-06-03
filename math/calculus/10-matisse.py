@@ -1,32 +1,33 @@
 #!/usr/bin/env python3
-"""
-poly_derivative.py
+"""Calculates deivative of a polynomial"""
 
-This module contains a function to compute the derivative of a polynomial
-represented as a list of coefficients.
-"""
 
 def poly_derivative(poly):
     """
-    Calculates the derivative of a polynomial.
+    calculates the derivative of the given polynomial
 
-    Args:
-        poly (list): A list of coefficients where the index represents the
-                     power of x (e.g., [5, 3, 0, 1] represents x^3 + 3x + 5).
+    Parameters:
+        poly (list): list of coefficients representing a polynomial
+            the index of the list represents the power of x
+            the coefficient belongs to
 
     Returns:
-        list: A list of coefficients representing the derivative of the polynomial.
-              Returns [0] if the derivative is zero.
-              Returns None if the input is invalid.
+        a new list of coefficients representing the derivative
+        [0], if the derivate is 0
+        None, if poly is not valid
     """
-    if not isinstance(poly, list) or len(poly) == 0:
+    if type(poly) is not list or len(poly) < 1:
         return None
-
-    if not all(isinstance(c, (int, float)) for c in poly):
-        return None
-
-    # Compute the derivative: d/dx of a_n * x^n = n * a_n
-    derivative = [i * poly[i] for i in range(1, len(poly))]
-
-    # Return [0] if the derivative is all zeros
-    return derivative if any(derivative) else [0]
+    for coefficient in poly:
+        if type(coefficient) is not int and type(coefficient) is not float:
+            return None
+        derivative = []  # list of derivative coefficients
+        for power, coefficient in enumerate(poly):
+            if power == 0:
+                continue
+            derivative.append(power * coefficient)
+        while len(derivative) > 1 and derivative[-1] == 0:
+            derivative.pop()
+        if not derivative:
+            return [0]
+        return derivative
